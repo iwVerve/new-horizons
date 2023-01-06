@@ -68,6 +68,8 @@ namespace NewHorizons.OtherMods.AchievementsPlus
 
             foreach (var achievement in addon.achievements)
             {
+                achievement.modUniqueName = mod.ModHelper.Manifest.UniqueName;
+
                 _achievements.Add(achievement);
 
                 API.RegisterAchievement(achievement.ID, achievement.secret, mod);

@@ -39,9 +39,17 @@ namespace NewHorizons.OtherMods.AchievementsPlus
         /// </summary>
         public string[] conditionIDs;
 
+        /// <summary>
+        /// A star system name where if all ship log facts there have been learned the achievement will be unlocked (like base-game Archaeologist achievement). Optional.
+        /// </summary>
+        public string archaeologistSystem;
+
         // Cache signal ids to the enum
         [JsonIgnore]
         private SignalName[] _signalIDs;
+
+        [JsonIgnore]
+        public string modUniqueName;
 
         public bool IsUnlocked()
         {
@@ -71,6 +79,14 @@ namespace NewHorizons.OtherMods.AchievementsPlus
                 foreach (var condition in conditionIDs)
                 {
                     if (!DialogueConditionManager.SharedInstance.GetConditionState(condition)) return false;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(archaeologistSystem))
+            {
+                if (Main.Instance.CurrentStarSystem != archaeologistSystem || !ShipLogHandler.KnowsAllModdedFacts(modUniqueName))
+                {
+                    return false;
                 }
             }
 

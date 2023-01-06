@@ -15,6 +15,8 @@ namespace NewHorizons.Handlers
         private static Dictionary<string, NewHorizonsBody> _entryIDsToNHBody;
         // NewHorizonsBody -> AstroID
         private static Dictionary<NewHorizonsBody, string> _nhBodyToAstroIDs;
+        // Mod, System name -> EntryIDs
+        private static Dictionary<(string modName, string systemName), List<string>> _modToEntryIDs;
 
         private static string[] _vanillaBodies;
         private static string[] _vanillaBodyIDs;
@@ -90,11 +92,17 @@ namespace NewHorizons.Handlers
             if (!_nhBodyToAstroIDs.ContainsKey(body)) _nhBodyToAstroIDs.Add(body, astroID);
             else Logger.LogWarning($"Possible duplicate shiplog entry {astroID} for {body.Config.name}");
 
+            // Tracking entries per mod per system
+            var key = (body.Mod.ModHelper.Manifest.UniqueName, body.Config.starSystem);
+            if (!_modToEntryIDs.ContainsKey(key)) _modToEntryIDs.Add(key, new List<string>());
+
             // EntryID to Body
             foreach (var entryID in entryIDs)
             {
                 if (!_entryIDsToNHBody.ContainsKey(entryID)) _entryIDsToNHBody.Add(entryID, body);
                 else Logger.LogWarning($"Possible duplicate shiplog entry  {entryID} for {astroID} from NewHorizonsBody {body.Config.name}");
+
+                _modToEntryIDs[key].Add(entryID);
             }
         }
 
@@ -115,6 +123,36 @@ namespace NewHorizons.Handlers
             var shipLogManager = Locator.GetShipLogManager();
             if (Main.Instance.CurrentStarSystem == "SolarSystem" && shipLogManager != null) return shipLogManager.IsFactRevealed(fact);
             else return PlayerData.GetShipLogFactSave(fact)?.revealOrder > -1;
+        }
+
+        public static bool KnowsAllModdedFacts(string uniqueName)
+        {
+            var key = (uniqueName, Main.Instance.CurrentStarSystem);
+            if (_modToEntryIDs.TryGetValue(key, out var entries))
+            {
+                if (entries.Count != 0)
+                {
+                    foreach (var entry in entries)
+                    {
+                        if (!KnowsFact(entry))
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    // No entries
+                    return false;
+                }
+            }
+            else
+            {
+                // No entries
+                return false;
+            }
         }
     }
 }
