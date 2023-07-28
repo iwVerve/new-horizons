@@ -12,7 +12,11 @@ namespace NewHorizons.Utility.OWML
         #region OnSceneUnloaded
         static Delay() => SceneManager.sceneUnloaded += OnSceneUnloaded;
 
-        private static void OnSceneUnloaded(Scene _) => Main.Instance.StopAllCoroutines();
+        private static void OnSceneUnloaded(Scene _)
+        {
+            Main.Instance.StopAllCoroutines();
+            _deferred.Clear();
+        }
         #endregion
 
         #region public methods
