@@ -208,7 +208,7 @@ namespace NewHorizons.Builder.Props
             // If the config says only certain exits are allowed, enforce that
             if (config.possibleExits != null)
             {
-                Delay.FireOnNextUpdate(() =>
+                Delay.CallDeferred(() =>
                 {
                     var exits = innerFogWarpVolume._exits;
                     var newExits = new List<SphericalFogWarpExit>();
@@ -291,7 +291,7 @@ namespace NewHorizons.Builder.Props
             }
 
             // Apply colors
-            Delay.FireOnNextUpdate(() => {
+            Delay.CallDeferred(() => {
                 if (config.isSeed)
                 {
                     SetSeedColors(brambleNode, farFogTint, fogLightTint, lightTint, lightShaftTint);
@@ -335,7 +335,7 @@ namespace NewHorizons.Builder.Props
                 // Redo the foglight data after everything is colored
                 if (fogLight._linkedFogLights != null)
                 {
-                    Delay.FireOnNextUpdate(() =>
+                    Delay.CallDeferred(() =>
                     {
                         FogLightManager fogLightManager = Locator.GetFogLightManager();
                         fogLight._linkedLightData.Clear();
@@ -364,7 +364,7 @@ namespace NewHorizons.Builder.Props
 
             if (config.preventRecursionCrash)
             {
-                Delay.FireOnNextUpdate(() =>
+                Delay.CallDeferred(() =>
                 {
                     var destination = GetOuterFogWarpVolumeFromAstroObject(AstroObjectLocator.GetAstroObject(config.linksTo).gameObject);
                     if (destination != null) destination._senderWarps.Remove(innerFogWarpVolume);

@@ -907,6 +907,12 @@ namespace NewHorizons
         }
         #endregion Change star system
 
-
+        public void LateUpdate()
+        {
+            if (Delay.HasDeferred)
+            {
+                Delay.InvokeDeferredActions();
+            }
+        }
     }
 }

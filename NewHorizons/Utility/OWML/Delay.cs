@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -59,5 +61,36 @@ namespace NewHorizons.Utility.OWML
             action.Invoke();
         }
         #endregion
+
+        public static void CallDeferred(int priority, Action action)
+        {
+            _deferred.Add((priority, action));
+            HasDeferred = true;
+        }
+
+        public static void CallDeferred(Action action) => CallDeferred(0, action);
+
+        // Lower number = higher priority
+        private static readonly List<(int priority, Action action)> _deferred = new();
+
+        public static bool HasDeferred { get; private set; }
+
+        public static void InvokeDeferredActions()
+        {
+            HasDeferred = false;
+            _deferred.OrderBy(x => x.priority);
+            foreach (var (priority, action) in _deferred)
+            {
+                try
+                {
+                    action?.Invoke();
+                }
+                catch (Exception e)
+                {
+                    NHLogger.LogError($"Failed to invoke deferred action {e}");
+                }
+            }
+            _deferred.Clear();
+        }
     }
 }

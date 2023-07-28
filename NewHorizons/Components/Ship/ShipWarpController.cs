@@ -149,7 +149,7 @@ namespace NewHorizons.Components.Ship
             // Idk whats making this work but now it works and idc
             if (_waitingToBeSeated && PlayerState.IsInsideShip() && _eyesOpen)
             {
-                Delay.FireInNUpdates(() => FinishWarpIn(), 1);
+                Delay.FireOnNextUpdate(FinishWarpIn);
                 _waitingToBeSeated = false;
             }
         }

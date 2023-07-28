@@ -193,7 +193,7 @@ namespace NewHorizons.Builder.Body
             // If the config says only certain entrances are allowed, enforce that
             if (config.allowedEntrances != null)
             {
-                Delay.FireOnNextUpdate(() =>
+                Delay.CallDeferred(() =>
                 {
                     var entrances = outerFogWarpVolume._exits;
                     var newEntrances = new List<SphericalFogWarpExit>();
@@ -243,8 +243,8 @@ namespace NewHorizons.Builder.Body
             cloak._sectors = new Sector[] { sector };
             cloak.GetComponent<Renderer>().enabled = true;
 
-            // Do next update so other nodes can be built first
-            Delay.FireOnNextUpdate(() =>
+            // Do at the end of update so other nodes can be built first
+            Delay.CallDeferred(() =>
             {
                 // Cull stuff
                 // this in in the delay because it fixes #562

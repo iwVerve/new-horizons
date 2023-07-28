@@ -167,8 +167,8 @@ namespace NewHorizons.Handlers
                     if (body.Config.destroy)
                     {
                         var ao = existingPlanet.GetComponent<AstroObject>();
-                        if (ao != null) Delay.FireInNUpdates(() => PlanetDestructionHandler.RemoveBody(ao), 2);
-                        else Delay.FireInNUpdates(() => PlanetDestructionHandler.DisableBody(existingPlanet, false), 2);
+                        if (ao != null) Delay.CallDeferred(() => PlanetDestructionHandler.RemoveBody(ao));
+                        else Delay.CallDeferred(() => PlanetDestructionHandler.DisableBody(existingPlanet, false));
                     }
                     else if (body.Config.isQuantumState)
                     {
@@ -878,7 +878,7 @@ namespace NewHorizons.Handlers
                 {
                     flag = false;
                     // idk why we wait here but we do
-                    Delay.FireInNUpdates(() => childObj.gameObject.SetActive(false), 2);
+                    Delay.CallDeferred(() => childObj.gameObject.SetActive(false));
                 }
 
                 if (flag) NHLogger.LogWarning($"Couldn't find \"{childPath}\".");

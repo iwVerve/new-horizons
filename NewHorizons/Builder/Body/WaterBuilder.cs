@@ -54,7 +54,7 @@ namespace NewHorizons.Builder.Body
 
             // Don't ignore sun when not under clouds
             waterGO.layer = Layer.Default;
-            Delay.FireOnNextUpdate(() => { if (planetGO.FindChild("Sector/SunOverride") != null) waterGO.layer = Layer.IgnoreSun; });
+            Delay.CallDeferred(() => { if (planetGO.FindChild("Sector/SunOverride") != null) waterGO.layer = Layer.IgnoreSun; });
 
             TessellatedSphereRenderer TSR = waterGO.AddComponent<TessellatedSphereRenderer>();
             TSR.tessellationMeshGroup = ScriptableObject.CreateInstance<MeshGroup>();

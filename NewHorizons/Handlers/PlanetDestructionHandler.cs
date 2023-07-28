@@ -62,7 +62,7 @@ namespace NewHorizons.Handlers
             foreach (var name in _solarSystemBodies)
             {
                 var ao = AstroObjectLocator.GetAstroObject(name);
-                if (ao != null) Delay.FireInNUpdates(() => RemoveBody(ao, false), 2);
+                if (ao != null) Delay.CallDeferred(() => RemoveBody(ao, false));
                 else NHLogger.LogError($"Couldn't find [{name}]");
             }
 
@@ -75,7 +75,7 @@ namespace NewHorizons.Handlers
             foreach (var name in _eyeOfTheUniverseBodies)
             {
                 var ao = AstroObjectLocator.GetAstroObject(name);
-                if (ao != null) Delay.FireInNUpdates(() => RemoveBody(ao, false), 2);
+                if (ao != null) Delay.CallDeferred(() => RemoveBody(ao, false));
                 else NHLogger.LogError($"Couldn't find [{name}]");
             }
         }

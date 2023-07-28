@@ -206,7 +206,7 @@ namespace NewHorizons.Builder.Props
             }
             else if (hearthianRecorder != null)
             {
-                Delay.FireOnNextUpdate(() =>
+                Delay.CallDeferred(() =>
                 {
                     // #520
                     if (hearthianRecorder._characterDialogueTree != null)
