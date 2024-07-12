@@ -12,6 +12,13 @@ namespace NewHorizons.Builder.Orbital
 
         public static OrbitLine Make(GameObject planetGO, NHAstroObject astroObject, bool isMoon, PlanetConfig config)
         {
+            // Relevant when updating an existing body; issue is this happens delayed so we can't check before calling it
+            var existingOrbitLine = planetGO.GetComponentInChildren<OrbitLine>(true)?.gameObject;
+            if (existingOrbitLine != null)
+            {
+                GameObject.Destroy(existingOrbitLine);
+            }
+
             if (_dottedLineMaterial == null) _dottedLineMaterial = SearchUtilities.FindResourceOfTypeAndName<Material>("Effects_SPA_OrbitLine_Dotted_mat");
             if (_lineMaterial == null) _lineMaterial = SearchUtilities.FindResourceOfTypeAndName<Material>("Effects_SPA_OrbitLine_mat");
 

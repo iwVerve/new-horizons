@@ -26,6 +26,8 @@ namespace NewHorizons.Handlers
 
         private PlanetNode _rootNode;
 
+        private HashSet<string> _parentedBodies = new();
+
         public PlanetGraphHandler(IEnumerable<NewHorizonsBody> iBodies)
         {
             var bodies = iBodies.ToArray();
@@ -134,21 +136,24 @@ namespace NewHorizons.Handlers
         }
 
 
-        private static PlanetNode ConstructGraph(NewHorizonsBody body, NewHorizonsBody[] bodies)
+        private PlanetNode ConstructGraph(NewHorizonsBody body, NewHorizonsBody[] bodies)
         {
+            PlanetNode newNode;
+
             if (body.Config.FocalPoint == null)
             {
-                return new PlanetNode
+                newNode = new PlanetNode
                 {
                     body = body,
                     children = bodies
-                        .Where(b => string.Equals(b.Config.Orbit.primaryBody, body.Config.name, StringComparison.CurrentCultureIgnoreCase))
+                        .Where(b => !_parentedBodies.Contains(b.Config.name) && string.Equals(b.Config.Orbit.primaryBody, body.Config.name, StringComparison.CurrentCultureIgnoreCase))
                         .Select(b => ConstructGraph(b, bodies))
                 };
+
             }
             else
             {
-                var newNode = new FocalPointNode
+                var newFocalPointNode = new FocalPointNode
                 {
                     body = body
                 };
@@ -156,7 +161,7 @@ namespace NewHorizons.Handlers
                 {
                     if (string.Equals(child.Config.name, body.Config.FocalPoint.primary, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        newNode.primary = new PlanetNode
+                        newFocalPointNode.primary = new PlanetNode
                         {
                             body = child,
                             children = new List<PlanetNode>()
@@ -164,18 +169,27 @@ namespace NewHorizons.Handlers
                     }
                     else if (string.Equals(child.Config.name, body.Config.FocalPoint.secondary, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        newNode.secondary = new PlanetNode
+                        newFocalPointNode.secondary = new PlanetNode
                         {
                             body = child,
                             children = new List<PlanetNode>()
                         };
                     }
                 }
-                newNode.children = bodies
-                    .Where(b => DetermineIfChildOfFocal(b, newNode))
+                newFocalPointNode.children = bodies
+                    .Where(b => !_parentedBodies.Contains(b.Config.name) && DetermineIfChildOfFocal(b, newFocalPointNode))
                     .Select(b => ConstructGraph(b, bodies));
-                return newNode;
+
+                newNode = newFocalPointNode;
             }
+
+            // Prevent a body from being added to multiple trees
+            foreach (var child in newNode.children)
+            {
+                _parentedBodies.Add(child.body.Config.name);
+            }
+
+            return newNode;
         }
 
         public IEnumerator<PlanetNode> GetEnumerator()

@@ -820,7 +820,7 @@ namespace NewHorizons.Handlers
                 if (referenceFrame != null) referenceFrame._attachedAstroObject = newAO;
 
                 // QM and stuff don't have orbit lines
-                var orbitLine = go.GetComponentInChildren<OrbitLine>()?.gameObject;
+                var orbitLine = go.GetComponentInChildren<OrbitLine>(true)?.gameObject;
                 if (orbitLine != null) UnityEngine.Object.Destroy(orbitLine);
 
                 var isMoon = newAO.GetAstroObjectType() is AstroObject.Type.Moon or AstroObject.Type.Satellite or AstroObject.Type.SpaceStation;
