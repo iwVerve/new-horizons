@@ -79,12 +79,14 @@ Alright so now that we understand how the file is structures, let's look into wh
     -   `primaryBody` is set to `TIMBER_HEARTH``, this makes our planet orbit timber hearth
     -   `isMoon` simply tells the game how close you have to be to the planet in map mode before its name appears
     -   `isTidallyLocked` makes sure that one side of our planet is always facing timber hearth (the primary body)
--   Finally, we have `Atmosphere`
+-   Next, we have `Atmosphere`
     -   Its `size` is 150, this simply sets how far away from the planet our atmosphere stretches
     -   Its `fogTint` is set to a color which is an object with r, g, b, and a properties (properties is another word for keys)
     -   `fogSize` determines how far away the fog stretches from the planet
     -   `fogDensity` is simply how dense the fog is
     -   `hasRain` makes rainfall on the planet
+-   Finally, we have `MapMarker`
+    -   `enabled` tells New Horizons that we want this planet to have a marker on the map screen
 
 #### What's a Schema?
 
