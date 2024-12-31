@@ -35,8 +35,7 @@ Once in VSCode, paste this code into the file:
     "Base": {
         "groundSize": 100,
         "surfaceSize": 101,
-        "surfaceGravity": 12,
-        "hasMapMarker": true
+        "surfaceGravity": 12
     },
     "Orbit": {
         "semiMajorAxis": 1300,
@@ -55,6 +54,9 @@ Once in VSCode, paste this code into the file:
         "fogSize": 150,
         "fogDensity": 0.2,
         "hasRain": true
+    },
+    "MapMarker": {
+        "enabled": true
     }
 }
 ```
